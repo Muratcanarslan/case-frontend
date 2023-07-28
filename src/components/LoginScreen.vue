@@ -35,13 +35,9 @@ export default {
           () => {
             this.$router.push('/');
           }, (error) => {
+            debugger;
             this.loading = false;
-            this.errorMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+            this.errorMessage =error.response.data;
             this.$toast.add({severity: 'error', summary: 'Hata Mesajı', detail: this.errorMessage, life: 3000});
           }
       );    

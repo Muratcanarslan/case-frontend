@@ -57,12 +57,7 @@
             this.$toast.add({severity: 'Success', summary: 'Success', detail: "Success", life: 3000});
         }, (error) => {
             this.loading = false;
-            this.errorMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+            this.errorMessage = error.response.data;
             this.$toast.add({severity: 'error', summary: 'Hata Mesajı', detail: this.errorMessage, life: 3000});
           }
       ); 
