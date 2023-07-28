@@ -1,27 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-
+import HomeScreen from "../components/HomeScreen.vue";
+import FileUploadScreen from "../components/FileUploadScreen.vue";
+import LoginScreen from "../components/LoginScreen.vue";
+import { checkIfTokenIsExpired } from '@/utils/jwtUtil';
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "/",
+    name: "HomeScreen",
+    component: HomeScreen
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-    }
+    path: "/login",
+    name: "LoginScreen",
+    component: LoginScreen
+  },
+  {
+    path: "/file-upload",
+    name: "FileUploadScreen",
+    component: FileUploadScreen
   }
 ]
 
+
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
-})
+});
+
+router.beforeEach((to,from,next) => {
+  const publicPages = ['/login'];
+  const authRequired = !publicPages.includes(to.path);
+  const token = localStorage.getItem('token');
+
+  if(token != null){
+    if(checkIfTokenIsExpired(token)){
+      localStorage.clear();
+    }
+  }
+  if(authRequired && !token){
+    next("/login");
+  }else{
+    next();
+  }
+});
 
 export default router
